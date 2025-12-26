@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Student {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long id ;
+    private Long student_id ;
 
     private String name ;
 

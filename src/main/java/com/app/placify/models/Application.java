@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id ;
+    private Long application_id ;
 
     private Long studentId ;
     private Long jobListingId ;

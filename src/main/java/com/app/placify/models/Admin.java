@@ -10,7 +10,7 @@ import java.util.UUID;
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long admin_id;
 
     private String name;
     private String email ;

@@ -1,5 +1,6 @@
 package com.app.placify.controller;
 
+import com.app.placify.dto.AppliedDto;
 import com.app.placify.dto.ApplyDto;
 import com.app.placify.dto.JobListingResponseDto;
 import com.app.placify.service.StudentService;
@@ -30,5 +31,11 @@ public class StudentController {
             return new ResponseEntity<>("Success", HttpStatus.OK);
         }
         return new  ResponseEntity<>("Cannot apply to this job", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/applications")
+    public ResponseEntity<List<AppliedDto>> getAppliedListing(@RequestParam Long studentId){
+        List<AppliedDto> list = studentService.getAppliedListing(studentId)  ;
+        return  ResponseEntity.ok().body(list);
     }
 }

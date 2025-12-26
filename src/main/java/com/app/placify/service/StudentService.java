@@ -1,5 +1,6 @@
 package com.app.placify.service;
 
+import com.app.placify.dto.AppliedDto;
 import com.app.placify.dto.JobListingResponseDto;
 import com.app.placify.models.Application;
 import com.app.placify.models.JobListing;
@@ -66,10 +67,16 @@ public class StudentService {
         }
         Application app = new Application();
         app.setJobListingId(jobList.get().getJobListingId());
-        app.setStudentId(student.get().getId());
+        app.setStudentId(student.get().getStudent_id());
         app.setAppliedDate(LocalDate.now());
         app.setAppliedTime(LocalTime.now());
         appRepo.save(app);
         return true ;
+    }
+
+    public List<AppliedDto> getAppliedListing(Long studentId){
+        List<AppliedDto> appliedDtos = new ArrayList<>();
+        List<AppliedDto> list = appRepo.findApplicationByStudentId(studentId) ;
+        return list ;
     }
 }

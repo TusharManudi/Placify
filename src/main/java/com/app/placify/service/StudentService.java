@@ -49,7 +49,7 @@ public class StudentService {
         jobListingResponseDto.setCompanyName(jobListing.getCompanyName());
         jobListingResponseDto.setJobRole(jobListing.getJobRole());
         jobListingResponseDto.setDomain(jobListing.getDomain());
-        jobListingResponseDto.setJobPostingDate(jobListing.getJobPostingDate());
+        jobListingResponseDto.setJobPostingDate(jobListing.getJobPostingDateTime().toString());
         return jobListingResponseDto;
     }
 

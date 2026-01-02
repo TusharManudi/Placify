@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Student {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private Long student_id ;
+    private Long studentId ;
 
     private String name ;
 
@@ -28,7 +28,7 @@ public class Student {
     private String resumeUrl ;
 
     @Column(unique = true , nullable = false )
-    private String universityRollno ;
+    private String universityRollNo ;
 
     private double tenthPercentage ;
     private double twelfthPercentage ;

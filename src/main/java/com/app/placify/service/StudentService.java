@@ -67,7 +67,7 @@ public class StudentService {
         }
         Application app = new Application();
         app.setJobListingId(jobList.get().getJobListingId());
-        app.setStudentId(student.get().getStudent_id());
+        app.setStudentId(student.get().getStudentId());
         app.setAppliedDate(LocalDate.now());
         app.setAppliedTime(LocalTime.now());
         appRepo.save(app);

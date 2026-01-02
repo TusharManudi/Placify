@@ -18,12 +18,14 @@ public class StudentController {
 
     private final StudentService studentService;
 
+    //List of currently active jobs that a student can apply to
     @GetMapping("/activejobs")
     public ResponseEntity<List<JobListingResponseDto>> getAllActiveJobListing(){
         List<JobListingResponseDto> responses = studentService.getAllActiveListing() ;
         return ResponseEntity.ok().body(responses);
     }
 
+    //Apply to a job - will be exposed as a button in the frontend
     @PostMapping("/apply")
     public ResponseEntity<String> apply(@RequestBody ApplyDto applyDto){
         boolean isApplied = studentService.applyForJob(applyDto.getJobId() , applyDto.getStudentId()) ;
@@ -33,6 +35,7 @@ public class StudentController {
         return new  ResponseEntity<>("Cannot apply to this job", HttpStatus.BAD_REQUEST);
     }
 
+    //Get the list of companies that student applied to
     @GetMapping("/applications")
     public ResponseEntity<List<AppliedDto>> getAppliedListing(@RequestParam Long studentId){
         List<AppliedDto> list = studentService.getAppliedListing(studentId)  ;

@@ -2,6 +2,9 @@ package com.app.placify.service;
 
 import com.app.placify.dto.ExportDto;
 import com.app.placify.dto.JobListingDto;
+import com.app.placify.exceptions.ExternalServiceException;
+import com.app.placify.exceptions.InvalidCredentials;
+import com.app.placify.exceptions.ResourceNotFoundException;
 import com.app.placify.models.JobListing;
 import com.app.placify.repository.AppRepo;
 import com.app.placify.repository.JobListingRepo;
@@ -37,6 +40,7 @@ public class CrcService {
         jobListingEntity.setDeadline(jobListing.getDeadline());
         jobListingEntity.setJobPostingDateTime(LocalDateTime.now());
         jobListingEntity.setDomain(jobListing.getDomain());
+        //Review this i think the crc admin id is left to be added
         JobListing job = jobListingRepo.save(jobListingEntity);
         return job.getJobListingId() ;
 
@@ -55,7 +59,7 @@ public class CrcService {
         List<ExportDto> list = appRepo.findApplicantsForJob(jobId);
         String name = getCompanyName(jobId) ;
         if(list.isEmpty()){
-            throw new RuntimeException("No applicants found for this job") ;
+            throw new ResourceNotFoundException("No applicants found for this job") ;
         }
         try (Workbook workbook = new XSSFWorkbook()){
             Sheet sheet = workbook.createSheet(name);
@@ -82,14 +86,14 @@ public class CrcService {
             workbook.write(baos);
             return baos.toByteArray();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to export job listing") ;
+            throw new ExternalServiceException("Export service failed") ;
         }
 
     }
     public String getCompanyName(Long jobId){
         Optional<JobListing> listing = jobListingRepo.findById(jobId) ;
         if(listing.isEmpty()){
-            throw new RuntimeException("Invalid job id") ;
+            throw new InvalidCredentials("Invalid job listing id") ;
         }
         String name =  listing.get().getCompanyName();
         return name ;

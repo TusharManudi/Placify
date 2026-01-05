@@ -2,6 +2,8 @@ package com.app.placify.service;
 
 import com.app.placify.dto.AppliedDto;
 import com.app.placify.dto.JobListingResponseDto;
+import com.app.placify.exceptions.BadRequestException;
+import com.app.placify.exceptions.ResourceNotFoundException;
 import com.app.placify.models.Application;
 import com.app.placify.models.JobListing;
 import com.app.placify.models.Student;
@@ -30,6 +32,9 @@ public class StudentService {
         LocalDateTime now = LocalDateTime.now();
 
         List<JobListing> activeJobs = jobListingRepo.findByDeadlineAfterOrderByDeadlineAsc(now);
+        if(activeJobs.isEmpty()){
+            throw new ResourceNotFoundException("No active jobs found") ;
+        }
         List<JobListingResponseDto> jobListingResponseDtos = new ArrayList<>();
 
         for(JobListing jobListing : activeJobs){
@@ -53,25 +58,25 @@ public class StudentService {
         return jobListingResponseDto;
     }
 
-    public boolean applyForJob(Long jobId , Long studentId) {
+    public Application applyForJob(Long jobId , Long studentId) {
         Optional<Student> student = studentRepo.findById(studentId) ;
         if(student.isEmpty()){
-            return false ;
+            throw new ResourceNotFoundException("No student found with id"+studentId);
         }
         Optional<JobListing> jobList = jobListingRepo.findById(jobId) ;
         if(jobList.isEmpty()){
-            return false ;
+            throw new ResourceNotFoundException("No job found with id"+jobId) ;
         }
         if(LocalDateTime.now().isAfter(jobList.get().getDeadline())){
-            return false ;
+            throw new BadRequestException("The deadline to apply has passed") ;
         }
         Application app = new Application();
         app.setJobListingId(jobList.get().getJobListingId());
         app.setStudentId(student.get().getStudentId());
         app.setAppliedDate(LocalDate.now());
         app.setAppliedTime(LocalTime.now());
-        appRepo.save(app);
-        return true ;
+        return appRepo.save(app);
+
     }
 
     public List<AppliedDto> getAppliedListing(Long studentId){

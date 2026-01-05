@@ -3,6 +3,7 @@ package com.app.placify.controller;
 import com.app.placify.dto.AppliedDto;
 import com.app.placify.dto.ApplyDto;
 import com.app.placify.dto.JobListingResponseDto;
+import com.app.placify.models.Application;
 import com.app.placify.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,12 +28,9 @@ public class StudentController {
 
     //Apply to a job - will be exposed as a button in the frontend
     @PostMapping("/apply")
-    public ResponseEntity<String> apply(@RequestBody ApplyDto applyDto){
-        boolean isApplied = studentService.applyForJob(applyDto.getJobId() , applyDto.getStudentId()) ;
-        if(isApplied){
-            return new ResponseEntity<>("Success", HttpStatus.OK);
-        }
-        return new  ResponseEntity<>("Cannot apply to this job", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<Application> apply(@RequestBody ApplyDto applyDto){
+        Application applied = studentService.applyForJob(applyDto.getJobId() , applyDto.getStudentId()) ;
+        return new ResponseEntity<>(applied, HttpStatus.OK);
     }
 
     //Get the list of companies that student applied to

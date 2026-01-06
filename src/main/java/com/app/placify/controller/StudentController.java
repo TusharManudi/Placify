@@ -39,4 +39,6 @@ public class StudentController {
         List<AppliedDto> list = studentService.getAppliedListing(studentId)  ;
         return  ResponseEntity.ok().body(list);
     }
+
+
 }

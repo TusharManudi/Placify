@@ -40,6 +40,7 @@ public class CrcService {
         jobListingEntity.setDeadline(jobListing.getDeadline());
         jobListingEntity.setJobPostingDateTime(LocalDateTime.now());
         jobListingEntity.setDomain(jobListing.getDomain());
+        jobListingEntity.setLocation(jobListing.getLocation());
         //Review this i think the crc admin id is left to be added
         JobListing job = jobListingRepo.save(jobListingEntity);
         return job.getJobListingId() ;

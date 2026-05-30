@@ -1,0 +1,20 @@
+package com.app.placify.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class StudentRegisterRequest {
+    private String name;
+    private String email;
+    private String password;
+    private String phone;
+    private String course;
+    private String branch;
+    private String universityRollNo;
+}

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class AppliedDto {
-        Long application_id ;
+        Long applicationId ;
         Long jobListingId;
         LocalDate appliedDate ;
         LocalTime appliedTime ;
@@ -12,14 +12,14 @@ public class AppliedDto {
         String jobRole ;
 
         public AppliedDto(
-                Long application_id,
+                Long applicationId,
                 Long jobListingId,
                 LocalDate appliedDate ,
                 LocalTime appliedTime,
                 String companyName,
                 String jobRole
         ){
-            this.application_id = application_id;
+            this.applicationId = applicationId;
             this.jobListingId = jobListingId;
             this.appliedDate = appliedDate;
             this.appliedTime = appliedTime;

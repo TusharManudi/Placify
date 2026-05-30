@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class PlacifyApplication {
 
 	public static void main(String[] args) {
-        SpringApplication.run(PlacifyApplication.class, args);
+		SpringApplication.run(PlacifyApplication.class, args);
 	}
 
 }

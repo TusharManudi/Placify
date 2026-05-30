@@ -11,6 +11,9 @@ public class ExportDto {
     private String name;
     private String universityRollNo ;
     private String email ;
+    private double tenthPercentage ;
+    private double twelfthPercentage ;
+    private double cgpa ;
     private String course ;
     private String branch ;
 }

@@ -70,6 +70,9 @@ public class StudentService {
         if(LocalDateTime.now().isAfter(jobList.get().getDeadline())){
             throw new BadRequestException("The deadline to apply has passed") ;
         }
+        if(appRepo.existsByStudentIdAndJobListingId(studentId, jobId)){
+            throw new BadRequestException("You have already applied for this job");
+        }
         Application app = new Application();
         app.setJobListingId(jobList.get().getJobListingId());
         app.setStudentId(student.get().getStudentId());
@@ -80,8 +83,47 @@ public class StudentService {
     }
 
     public List<AppliedDto> getAppliedListing(Long studentId){
-        List<AppliedDto> appliedDtos = new ArrayList<>();
-        List<AppliedDto> list = appRepo.findApplicationByStudentId(studentId) ;
+        List<AppliedDto> list = appRepo.fetchApplicationsByStudentId(studentId) ;
         return list ;
+    }
+
+    public com.app.placify.dto.StudentProfileDto getProfile(Long studentId) {
+        Student student = studentRepo.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("No student found with id " + studentId));
+        
+        com.app.placify.dto.StudentProfileDto dto = new com.app.placify.dto.StudentProfileDto();
+        dto.setStudentId(student.getStudentId());
+        dto.setName(student.getName());
+        dto.setEmail(student.getEmail());
+        dto.setPhone(student.getPhone());
+        dto.setCourse(student.getCourse());
+        dto.setBranch(student.getBranch());
+        dto.setResumeUrl(student.getResumeUrl());
+        dto.setUniversityRollNo(student.getUniversityRollNo());
+        dto.setTenthPercentage(student.getTenthPercentage());
+        dto.setTwelfthPercentage(student.getTwelfthPercentage());
+        dto.setGraduationCgpa(student.getGraduationCgpa());
+        dto.setPostGraduationCgpa(student.getPostGraduationCgpa());
+        dto.setCreatedAt(student.getCreatedAt());
+        
+        return dto;
+    }
+
+    public com.app.placify.dto.StudentProfileDto updateProfile(Long studentId, com.app.placify.dto.StudentProfileUpdateDto updateDto) {
+        Student student = studentRepo.findById(studentId)
+                .orElseThrow(() -> new ResourceNotFoundException("No student found with id " + studentId));
+        
+        student.setName(updateDto.getName());
+        student.setPhone(updateDto.getPhone());
+        student.setCourse(updateDto.getCourse());
+        student.setBranch(updateDto.getBranch());
+        student.setResumeUrl(updateDto.getResumeUrl());
+        student.setTenthPercentage(updateDto.getTenthPercentage());
+        student.setTwelfthPercentage(updateDto.getTwelfthPercentage());
+        student.setGraduationCgpa(updateDto.getGraduationCgpa());
+        student.setPostGraduationCgpa(updateDto.getPostGraduationCgpa());
+        
+        studentRepo.save(student);
+        return getProfile(studentId);
     }
 }

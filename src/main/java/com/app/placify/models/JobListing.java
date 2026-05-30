@@ -29,5 +29,5 @@ public class JobListing {
 
     //Id of crc official
     //Foreign key
-    private UUID createdBy ;
+    private Long createdBy ;
 }

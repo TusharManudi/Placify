@@ -6,7 +6,11 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Setter
+import lombok.Data;
+
+import java.time.LocalDateTime;
+
+@Data
 public class JobListingResponseDto {
     private Long id ;
     private String companyName ;

@@ -29,9 +29,16 @@ import java.util.Optional;
 public class CrcService {
 
     private final JobListingRepo jobListingRepo;
-    private final AppRepo  appRepo;
+    private final AppRepo appRepo;
+    private final com.app.placify.repository.AdminRepo adminRepo;
 
-    public Long createJobListing(JobListingDto jobListing) {
+    public String getAdminName(Long adminId) {
+        return adminRepo.findById(adminId)
+            .map(com.app.placify.models.Admin::getName)
+            .orElse("Admin");
+    }
+
+    public Long createJobListing(JobListingDto jobListing, Long adminId) {
         JobListing jobListingEntity = new JobListing();
         jobListingEntity.setCompanyName(jobListing.getCompanyName());
         jobListingEntity.setJobDescription(jobListing.getJobDescription());
@@ -41,7 +48,8 @@ public class CrcService {
         jobListingEntity.setJobPostingDateTime(LocalDateTime.now());
         jobListingEntity.setDomain(jobListing.getDomain());
         jobListingEntity.setLocation(jobListing.getLocation());
-        //Review this i think the crc admin id is left to be added
+        jobListingEntity.setCreatedBy(adminId);
+        
         JobListing job = jobListingRepo.save(jobListingEntity);
         return job.getJobListingId() ;
 
@@ -49,7 +57,7 @@ public class CrcService {
 
     public Page<JobListing> getAllTheListingForAdmin(String search , int page , int size) {
         Pageable pageable =  PageRequest.of(page, size , Sort.by("jobPostingDateTime").descending());
-        if(search.isBlank()){
+        if(search == null || search.isBlank()){
             return jobListingRepo.findAll(pageable);
         }
         return  jobListingRepo.findByCompanyNameContainingIgnoreCase(search,pageable);
@@ -57,7 +65,7 @@ public class CrcService {
     }
 
     public byte[] exportDataToExcel(Long jobId){
-        List<ExportDto> list = appRepo.findApplicantsForJob(jobId);
+        List<ExportDto> list = appRepo.fetchApplicantsForJob(jobId);
         String name = getCompanyName(jobId) ;
         if(list.isEmpty()){
             throw new ResourceNotFoundException("No applicants found for this job") ;
@@ -72,6 +80,9 @@ public class CrcService {
             header.createCell(2).setCellValue("Course");
             header.createCell(3).setCellValue("Branch");
             header.createCell(4).setCellValue("Email");
+            header.createCell(5).setCellValue("10th %");
+            header.createCell(6).setCellValue("12th %");
+            header.createCell(7).setCellValue("CGPA");
 
             int rowNumber = 2 ;
             for(ExportDto dto : list){
@@ -81,6 +92,9 @@ public class CrcService {
                 row.createCell(2).setCellValue(dto.getCourse());
                 row.createCell(3).setCellValue(dto.getBranch());
                 row.createCell(4).setCellValue(dto.getEmail());
+                row.createCell(5).setCellValue(dto.getTenthPercentage());
+                row.createCell(6).setCellValue(dto.getTwelfthPercentage());
+                row.createCell(7).setCellValue(dto.getCgpa());
             }
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -98,5 +112,9 @@ public class CrcService {
         }
         String name =  listing.get().getCompanyName();
         return name ;
+    }
+
+    public List<ExportDto> getApplicantsForJob(Long jobId) {
+        return appRepo.fetchApplicantsForJob(jobId);
     }
 }

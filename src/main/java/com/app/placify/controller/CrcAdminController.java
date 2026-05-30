@@ -12,9 +12,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.core.Authentication;
+import com.app.placify.security.CustomUserDetails;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 @CrossOrigin("*")
 public class CrcAdminController {
 
@@ -22,9 +25,10 @@ public class CrcAdminController {
 
     //Endpoint for admins to create a listing
     @PostMapping("/createListing")
-    public ResponseEntity<String> createjobListing(@RequestBody JobListingDto jobListingDto){
-        Long jobId = crcService.createJobListing(jobListingDto) ;
-        return ResponseEntity.status(HttpStatus.CREATED).body("Listing created successfully"+jobId.toString());
+    public ResponseEntity<String> createjobListing(@RequestBody JobListingDto jobListingDto, Authentication authentication){
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long jobId = crcService.createJobListing(jobListingDto, userDetails.getId()) ;
+        return ResponseEntity.status(HttpStatus.CREATED).body("Listing created successfully "+jobId.toString());
     }
 
     //Paginated api to get list of all job listing and search by company name
@@ -50,6 +54,17 @@ public class CrcAdminController {
                 .body(file);
     }
 
+    @GetMapping("/{jobId}/applicants")
+    public ResponseEntity<java.util.List<com.app.placify.dto.ExportDto>> getApplicants(@PathVariable("jobId") Long jobId) {
+        java.util.List<com.app.placify.dto.ExportDto> applicants = crcService.getApplicantsForJob(jobId);
+        return ResponseEntity.ok(applicants);
+    }
 
+    @GetMapping("/profile")
+    public ResponseEntity<java.util.Map<String, String>> getAdminProfile(Authentication authentication) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String name = crcService.getAdminName(userDetails.getId());
+        return ResponseEntity.ok(java.util.Map.of("name", name));
+    }
 
 }

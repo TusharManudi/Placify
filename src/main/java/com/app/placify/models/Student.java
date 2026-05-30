@@ -20,6 +20,10 @@ public class Student {
 
     private String email ;
 
+    private String password;
+
+    private String role = "ROLE_STUDENT";
+
     @Column(unique = true , nullable = false )
     private String phone ;
 

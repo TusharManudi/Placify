@@ -34,4 +34,6 @@ build/
 .env
 
 /PlacifyFrontend/
+/PlacifyFrontend/node_modules
+
 

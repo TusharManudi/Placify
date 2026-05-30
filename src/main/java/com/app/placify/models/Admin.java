@@ -6,7 +6,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
+@Getter
+@Setter
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,6 +19,10 @@ public class Admin {
 
     private String name;
     private String email ;
+
+    private String password;
+
+    private String role = "ROLE_ADMIN";
 
     @Column(unique = true , nullable = false )
     private String phone ;
